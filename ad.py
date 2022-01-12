@@ -6,12 +6,12 @@ def create_folder(AD_SERVER,AD_USER,AD_PASSWORD,AD_SEARCH_TREE,ABS_PATH,FOLDER):
     # домен - example.com
     # DNS имя сервера Active Directory
     print("Start task")
-    AD_SERVER = 'vcntdc1a'
+    AD_SERVER = 'adserver'
     # Пользователь (логин) в Active Directory - нужно указать логин в AD 
     # в формате 'EXAMPLE\aduser' или 'aduser@example.com'
-    AD_USER = 'GIGANT\\root3'
-    AD_PASSWORD = 'Ntrcnbkmobrb1234'
-    AD_SEARCH_TREE = 'dc=gigant,dc=pdc'
+    AD_USER = 'company\\admin'
+    AD_PASSWORD = 'password'
+    AD_SEARCH_TREE = 'dc=company,dc=local'
     ABS_PATH = ABS_PATH
     FOLDER = FOLDER
     server = Server(AD_SERVER)
@@ -19,15 +19,6 @@ def create_folder(AD_SERVER,AD_USER,AD_PASSWORD,AD_SEARCH_TREE,ABS_PATH,FOLDER):
     conn.bind()
     # в ответ должно быть - True
 
-    # Поиск в Active Directory
-    # примеры ldap фильтров можно посмотреть здесь -
-    # https://social.technet.microsoft.com/wiki/contents/articles/8077.active-directory-ldap-ru-ru.aspx
-    # Я в нижеследующем фильтре:
-    # - исключаю всеx отключенных пользователей (!(UserAccountControl:1.2.840.113556.1.4.803:=2))
-    # - добавляю только тех пользователей у которых заполнено имя и фамилия
-    # - и вывожу атрибуты - attributes
-    # Все возможные атрибуты Active Directory можно посмотреть здесь -
-    # https://msdn.microsoft.com/en-us/library/ms675090%28v=vs.85%29.aspx
     conn.search(AD_SEARCH_TREE,'(&(objectCategory=Person)(!(UserAccountControl:1.2.840.113556.1.4.803:=2))(givenName=*)(sn=*))',
         SUBTREE,
         attributes =['cn','sAMAccountName']

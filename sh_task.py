@@ -29,15 +29,7 @@ def create_folder():
     conn.bind()
     # в ответ должно быть - True
 
-    # Поиск в Active Directory
-    # примеры ldap фильтров можно посмотреть здесь -
-    # https://social.technet.microsoft.com/wiki/contents/articles/8077.active-directory-ldap-ru-ru.aspx
-    # Я в нижеследующем фильтре:
-    # - исключаю всеx отключенных пользователей (!(UserAccountControl:1.2.840.113556.1.4.803:=2))
-    # - добавляю только тех пользователей у которых заполнено имя и фамилия
-    # - и вывожу атрибуты - attributes
-    # Все возможные атрибуты Active Directory можно посмотреть здесь -
-    # https://msdn.microsoft.com/en-us/library/ms675090%28v=vs.85%29.aspx
+    
     conn.search(AD_SEARCH_TREE,'(&(objectCategory=Person)(!(UserAccountControl:1.2.840.113556.1.4.803:=2))(givenName=*)(sn=*))',
         SUBTREE,
         attributes =['cn','sAMAccountName']
@@ -57,15 +49,15 @@ def create_folder():
             command0 = subprocess.run(f'icacls "{path}" /T /Q /C /RESET', shell=True, check=True)
             command1 = subprocess.run(f'icacls  "{path}" /inheritance:d', shell=True, check=True)
             command10 = subprocess.run(f'icacls "{path}" /grant "{AD_USER}":(NP)F', shell=True, check=True)
-            command2 = subprocess.run(f'icacls "{path}" /grant "centervospi\{AccountName}":(NP)F', shell=True, check=True)
-            command3 = subprocess.run(f'icacls "{path}" /grant:r "centervospi\Domain Users":R', shell=True, check=True)
+            command2 = subprocess.run(f'icacls "{path}" /grant "comapny\{AccountName}":(NP)F', shell=True, check=True)
+            command3 = subprocess.run(f'icacls "{path}" /grant:r "company\Domain Users":R', shell=True, check=True)
             for folder_char in FOLDER:
                 path2=f"{ABS_PATH}{strusr}\\{folder_char}"
                 os.mkdir(path2)
                 command4 = subprocess.run(f'icacls "{path2}" /T /Q /C /RESET', shell=True, check=True)
                 command5 = subprocess.run(f'icacls "{path2}" /inheritance:d', shell=True, check=True)
-                command6 = subprocess.run(f'icacls "{path2}" /grant "centervospi\Domain Users":RW', shell=True, check=True)
-                command7 = subprocess.run(f'icacls "{path2}" /grant "centervospi\{AccountName}":(NP)F', shell=True, check=True)
+                command6 = subprocess.run(f'icacls "{path2}" /grant "company\Domain Users":RW', shell=True, check=True)
+                command7 = subprocess.run(f'icacls "{path2}" /grant "company\{AccountName}":(NP)F', shell=True, check=True)
                 command8 = subprocess.run(f'icacls "{path2}" /grant "{AD_USER}":(NP)F', shell=True, check=True)
         except OSError:
             print ("Creation of the directory %s failed" % path)
